@@ -6,6 +6,8 @@
     <title>Listing Details - Auction Site</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="./js/logout.js" defer></script>
+    <script src="./js/listing-details.js" defer></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -30,20 +32,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="create-listing.html">Create Listing</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="search.html">Search Listings</a>
-                </li>
             </ul>
+            <button class="btn btn-outline-danger" id="logout-link">Logout</button>
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <div class="container mt-4 text-center">
         <h1 id="listing-title">Listing Title</h1>
+        <img id="listing-image" src="" alt="Listing Image" class="img-fluid mb-3">
         <p id="listing-description">Listing Description</p>
         <p id="listing-deadline">Deadline: </p>
-        <h3>Bids</h3>
-        <ul id="bids-list"></ul>
-        <form id="bid-form">
+        <h3>Current Highest Bid: <span id="current-bid">0</span> credits</h3>
+        <form id="bid-form" class="mb-4">
             <div class="form-group">
                 <label for="bid-amount">Your Bid (credits)</label>
                 <input type="number" class="form-control" id="bid-amount" required>
@@ -51,68 +51,8 @@
             <button type="submit" class="btn btn-primary">Place Bid</button>
         </form>
         <p id="bid-message"></p>
+        <h3>Bids</h3>
+        <ul id="bids-list" class="list-unstyled"></ul>
     </div>
-
-    <script src="js/app.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const listingId = urlParams.get('id');
-            const token = localStorage.getItem('token');
-
-            if (!listingId) {
-                document.body.innerHTML = '<p>Listing not found.</p>';
-                return;
-            }
-
-            fetch(`https://api.noroff.dev/api/v2/auction/listings/${listingId}`)
-                .then(response => response.json())
-                .then(listing => {
-                    document.getElementById('listing-title').textContent = listing.title;
-                    document.getElementById('listing-description').textContent = listing.description;
-                    document.getElementById('listing-deadline').textContent = `Deadline: ${new Date(listing.deadline).toLocaleString()}`;
-                    document.getElementById('bids-list').innerHTML = listing.bids.map(bid => `<li>${bid.amount} credits by ${bid.bidderName}</li>`).join('');
-                })
-                .catch(error => {
-                    document.body.innerHTML = `<p>Error fetching listing details: ${error.message}</p>`;
-                });
-
-            const form = document.getElementById('bid-form');
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const amount = document.getElementById('bid-amount').value;
-                const message = document.getElementById('bid-message');
-
-                if (!token) {
-                    message.textContent = 'You must be logged in to place a bid.';
-                    message.classList.add('text-danger');
-                    return;
-                }
-
-                try {
-                    const response = await fetch(`https://api.noroff.dev/api/v2/auction/listings/${listingId}/bids`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({ amount }),
-                    });
-                    if (response.ok) {
-                        message.textContent = 'Bid placed successfully!';
-                        message.classList.add('text-success');
-                        window.location.reload();
-                    } else {
-                        const errorData = await response.json();
-                        message.textContent = `Error placing bid: ${errorData.message}`;
-                        message.classList.add('text-danger');
-                    }
-                } catch (error) {
-                    message.textContent = `Error: ${error.message}`;
-                    message.classList.add('text-danger');
-                }
-            });
-        });
-    </script>
 </body>
 </html>

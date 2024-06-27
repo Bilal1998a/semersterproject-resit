@@ -6,6 +6,7 @@
     <title>Create Listing - Auction Site</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="./js/create-listing.js" defer></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -29,9 +30,6 @@
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="create-listing.html">Create Listing <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="search.html">Search Listings</a>
                 </li>
             </ul>
         </div>
@@ -61,49 +59,5 @@
         <p id="create-listing-message"></p>
     </div>
 
-    <script src="js/app.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('create-listing-form');
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const title = document.getElementById('listing-title').value;
-                const deadline = document.getElementById('listing-deadline').value;
-                const description = document.getElementById('listing-description').value;
-                const media = document.getElementById('listing-media').value.split(',').map(url => url.trim());
-                const message = document.getElementById('create-listing-message');
-
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    message.textContent = 'You must be logged in to create a listing.';
-                    message.classList.add('text-danger');
-                    return;
-                }
-
-                try {
-                    const response = await fetch('https://api.noroff.dev/api/v2/auction/listings', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({ title, deadline, description, media }),
-                    });
-                    if (response.ok) {
-                        message.textContent = 'Listing created successfully!';
-                        message.classList.add('text-success');
-                    } else {
-                        const errorData = await response.json();
-                        message.textContent = `Error creating listing: ${errorData.message}`;
-                        message.classList.add('text-danger');
-                    }
-                } catch (error) {
-                    message.textContent = `Error: ${error.message}`;
-                    message.classList.add('text-danger');
-                }
-            });
-        });
-    </script>
 </body>
 </html>
- 
