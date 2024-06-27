@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const username = localStorage.getItem('username');
     const accessToken = localStorage.getItem('accessToken');
 
-    // Check if username is available
+   
     if (!username) {
         console.error('Username not found in localStorage');
         profileName.textContent = 'Please log in';
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log('Username:', username);
 
-    // Fetch profile details
+   
     async function fetchProfile() {
         try {
             const response = await fetch(`https://api.noroff.dev/api/v1/auction/profiles/${username}`, {
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             profileName.textContent = 'Error fetching profile';
-            console.error('Error fetching profile:', error); // Log the error for debugging
+            console.error('Error fetching profile:', error); 
         }
     }
 

@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 listingsDiv.innerHTML = `<p>Error searching listings: ${error.message}</p>`;
             }
         } else {
-            // Clear listings if search bar is empty
+           
             listingsDiv.innerHTML = '';
         }
     });

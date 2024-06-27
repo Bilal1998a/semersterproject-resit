@@ -31,14 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Construct the payload
+       
         const payload = {
             name,
             email,
             password
         };
 
-        console.log('Payload:', JSON.stringify(payload, null, 2)); // Log payload for debugging
+        console.log('Payload:', JSON.stringify(payload, null, 2)); 
 
         try {
             const response = await fetch('https://api.noroff.dev/api/v1/auction/auth/register', {
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 2000);
             } else if (response.status === 400) {
                 displayMessage(`Registration failed: ${responseData.errors[0].message}`, 'danger');
-                console.error('Registration error details:', responseData); // Log detailed error response
+                console.error('Registration error details:', responseData); 
             } else {
                 displayMessage('Registration failed: An unknown error occurred.', 'danger');
             }

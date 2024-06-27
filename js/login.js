@@ -10,25 +10,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = emailInput.value.trim();
         const password = passwordInput.value.trim();
 
-        // Validate email domain
         if (!email.endsWith('@stud.noroff.no')) {
             displayMessage('Email must end with @stud.noroff.no', 'danger');
             return;
         }
 
-        // Ensure password is not empty
+       
         if (!password) {
             displayMessage('Password cannot be empty', 'danger');
             return;
         }
 
-        // Construct the payload
+        
         const payload = {
             email,
             password
         };
 
-        console.log('Payload:', JSON.stringify(payload, null, 2)); // Log payload for debugging
+        console.log('Payload:', JSON.stringify(payload, null, 2)); 
 
         try {
             const response = await fetch('https://api.noroff.dev/api/v1/auction/auth/login', {
@@ -40,15 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const responseData = await response.json();
-            console.log('Response Status:', response.status); // Log response status
-            console.log('Response Data:', responseData); // Log response data
+            console.log('Response Status:', response.status); 
+            console.log('Response Data:', responseData); 
 
             if (response.ok) {
-                // Directly access the properties within responseData
+                
                 const { accessToken, name } = responseData;
 
                 if (accessToken) {
-                    // Store the token and username in localStorage
+                   
                     localStorage.setItem('accessToken', accessToken);
                     localStorage.setItem('username', name);
 
@@ -61,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else if (response.status === 400) {
                 displayMessage(`Login failed: ${responseData.errors[0].message}`, 'danger');
-                console.error('Login error details:', responseData); // Log detailed error response
+                console.error('Login error details:', responseData); 
             } else {
                 displayMessage('Login failed: An unknown error occurred.', 'danger');
             }

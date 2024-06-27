@@ -10,13 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const bidMessage = document.getElementById('bid-message');
     const currentBid = document.getElementById('current-bid');
 
-    // Fetch listing details
+   
     async function fetchListingDetails() {
         try {
             const response = await fetch(`https://api.noroff.dev/api/v1/auction/listings/${listingId}?_bids=true`);
             const data = await response.json();
 
-            console.log('Listing Data:', data); // Log the listing data for debugging
+            console.log('Listing Data:', data); 
 
             if (response.ok) {
                 listingTitle.textContent = data.title;
@@ -31,11 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             listingTitle.textContent = 'Error fetching listing details';
-            console.error('Error fetching listing details:', error); // Log the error for debugging
+            console.error('Error fetching listing details:', error); 
         }
     }
 
-    // Update current highest bid
+    
     function updateCurrentBid(bids) {
         if (bids.length > 0) {
             const highestBid = Math.max(...bids.map(bid => bid.amount));
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Render bids
+  
     function renderBids(bids) {
         bidsList.innerHTML = bids.map(bid => {
             const bidderName = bid.bidder ? bid.bidder.name : 'Unknown Bidder';
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('');
     }
 
-    // Submit a new bid
+ 
     bidForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 bidMessage.textContent = 'Bid placed successfully!';
                 bidMessage.classList.add('text-success');
-                fetchListingDetails(); // Refresh listing details to show new bids
+                fetchListingDetails(); 
             } else {
                 const data = await response.json();
                 bidMessage.textContent = `Failed to place bid: ${data.errors[0].message}`;

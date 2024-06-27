@@ -1,10 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
     const listingsDiv = document.getElementById('listings');
     const searchBar = document.getElementById('search-bar');
+    const prevPageButton = document.getElementById('prev-page');
+    const nextPageButton = document.getElementById('next-page');
+
+    let currentPage = 1;
+    const itemsPerPage = 15;
+    let allListings = [];
 
     async function renderListings(listings) {
         listingsDiv.innerHTML = listings.map(listing => {
-            const imageUrl = listing.media.length > 0 ? listing.media[0] : 'https://via.placeholder.com/150'; // Adjusted for direct string URLs
+            const imageUrl = listing.media.length > 0 ? listing.media[0] : 'https://via.placeholder.com/150';
             const imageAlt = 'Image';
 
             return `
@@ -22,26 +28,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('');
     }
 
-    async function loadListings() {
+    async function loadListings(page = 1) {
         try {
             const data = await fetchListings();
-            console.log(data); // Debugging line to inspect data object
-            const sortedData = data.sort((a, b) => new Date(b.endsAt) - new Date(a.endsAt));
-            renderListings(sortedData);
+            allListings = data.sort((a, b) => new Date(b.endsAt) - new Date(a.endsAt));
+            paginateListings(page);
         } catch (error) {
             listingsDiv.innerHTML = `<p>Error loading listings: ${error.message}</p>`;
         }
     }
 
+    function paginateListings(page) {
+        const start = (page - 1) * itemsPerPage;
+        const end = page * itemsPerPage;
+        const paginatedListings = allListings.slice(start, end);
+        renderListings(paginatedListings);
+        updatePaginationButtons();
+    }
+
+    function updatePaginationButtons() {
+        prevPageButton.disabled = currentPage === 1;
+        nextPageButton.disabled = currentPage * itemsPerPage >= allListings.length;
+    }
+
     searchBar.addEventListener('input', async (e) => {
         const query = e.target.value.toLowerCase();
-        try {
-            const data = await fetchListings();
-            const filteredListings = data.filter(listing => listing.title.toLowerCase().includes(query) || listing.description.toLowerCase().includes(query));
-            const sortedData = filteredListings.sort((a, b) => new Date(b.endsAt) - new Date(a.endsAt));
-            renderListings(sortedData);
-        } catch (error) {
-            listingsDiv.innerHTML = `<p>Error filtering listings: ${error.message}</p>`;
+        const filteredListings = allListings.filter(listing => listing.title.toLowerCase().includes(query) || listing.description.toLowerCase().includes(query));
+        renderListings(filteredListings);
+        currentPage = 1; // Reset to first page on search
+        updatePaginationButtons();
+    });
+
+    prevPageButton.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            paginateListings(currentPage);
+        }
+    });
+
+    nextPageButton.addEventListener('click', () => {
+        if (currentPage * itemsPerPage < allListings.length) {
+            currentPage++;
+            paginateListings(currentPage);
         }
     });
 
