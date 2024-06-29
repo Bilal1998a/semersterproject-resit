@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = e.target.value.toLowerCase();
         const filteredListings = allListings.filter(listing => listing.title.toLowerCase().includes(query) || listing.description.toLowerCase().includes(query));
         renderListings(filteredListings);
-        currentPage = 1; // Reset to first page on search
+        currentPage = 1; 
         updatePaginationButtons();
     });
 

@@ -12,19 +12,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = emailInput.value.trim();
         const password = passwordInput.value.trim();
 
-        // Validate email domain
+        
         if (!email.endsWith('@stud.noroff.no')) {
             displayMessage('Email must end with @stud.noroff.no', 'danger');
             return;
         }
 
-        // Ensure password is at least 8 characters long
+        
         if (password.length < 8) {
             displayMessage('Password must be at least 8 characters long', 'danger');
             return;
         }
 
-        // Ensure name contains only valid characters
+        
         const nameRegex = /^[A-Za-z0-9_]+$/;
         if (!nameRegex.test(name)) {
             displayMessage('Name can only contain letters, numbers, and underscores.', 'danger');

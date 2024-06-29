@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const accessToken = localStorage.getItem('accessToken');
 
-   
+    // Validate URLs
     function validateURLs(urls) {
         const urlPattern = /^(http|https):\/\/[^ "]+$/;
         return urls.every(url => urlPattern.test(url));
@@ -22,19 +22,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const description = descriptionInput.value.trim();
         const mediaUrls = mediaInput.value.split(',').map(url => url.trim());
 
-       
+        // Validate media URLs
         if (!validateURLs(mediaUrls)) {
             message.textContent = 'Invalid URL(s) provided in the media gallery.';
             message.classList.add('text-danger');
             return;
         }
 
-        const media = mediaUrls.map(url => ({ url, alt: title }));
-
         const listingData = {
             title,
             description,
-            media,
+            media: mediaUrls,
             endsAt
         };
 
